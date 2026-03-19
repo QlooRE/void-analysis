@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Void Analysis — Qloo Taste AI™</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/static/style.css?v=21">
+</head>
+<body>
+
+<header class="app-header">
+  <div class="logo">Q</div>
+  <div>
+    <h1>Void Analysis</h1>
+    <p>Taste AI™ — retail demand vs. physical presence</p>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+
+    <!-- Location -->
+    <div>
+      <div class="section-label">① Address</div>
+
+      <div class="search-wrap">
+        <input class="search-input" id="location-input" type="text"
+               placeholder="Search an address or neighborhood…" autocomplete="off">
+        <div class="search-dropdown hidden" id="location-dropdown"></div>
+      </div>
+      <div class="pills" id="location-pill"></div>
+    </div>
+
+    <!-- Distance -->
+    <div>
+      <div class="section-label">② Radius</div>
+      <div class="distance-row">
+        <input class="distance-input" id="distance-input" type="number"
+               min="0.1" max="50" step="0.5" value="5">
+        <div class="unit-toggle" id="unit-toggle">
+          <button class="unit-btn active" data-unit="mi">mi</button>
+          <button class="unit-btn" data-unit="km">km</button>
+        </div>
+      </div>
+      <p class="field-hint" id="radius-hint">Straight-line radius from your address</p>
+    </div>
+
+    <!-- Audience Signals -->
+    <div>
+      <div class="section-label">③ Audience Signals</div>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="entity">Entities</button>
+        <button class="tab-btn" data-tab="tag">Tags</button>
+      </div>
+      <div class="search-wrap">
+        <input class="search-input" id="signal-input" type="text"
+               placeholder="Search artists, brands, interests…" autocomplete="off">
+        <div class="search-dropdown hidden" id="signal-dropdown"></div>
+      </div>
+      <div class="pills" id="signal-pills"></div>
+    </div>
+
+    <!-- Age Groups -->
+    <div>
+      <div class="section-label">Age Groups</div>
+      <div class="age-grid" id="age-grid">
+        <label class="age-option" data-key="gen_z"><input type="checkbox"><span>Gen Z &lt;25</span></label>
+        <label class="age-option" data-key="young_millennial"><input type="checkbox"><span>25–29</span></label>
+        <label class="age-option" data-key="millennial"><input type="checkbox"><span>30–34</span></label>
+        <label class="age-option" data-key="older_millennial"><input type="checkbox"><span>35–44</span></label>
+        <label class="age-option" data-key="gen_x"><input type="checkbox"><span>Gen X 45–54</span></label>
+        <label class="age-option" data-key="boomer"><input type="checkbox"><span>Boomer 55+</span></label>
+      </div>
+    </div>
+
+    <!-- Analysis Type -->
+    <div>
+      <div class="section-label">④ Analysis Type</div>
+      <div class="mode-toggle" id="analysis-type-toggle">
+        <button class="mode-btn active" data-type="brand">Brand Void</button>
+        <button class="mode-btn" data-type="cuisine">Cuisine Void</button>
+      </div>
+    </div>
+
+    <button class="discover-btn" id="analyze-btn" disabled>Analyze Voids</button>
+
+    <!-- Results injected here -->
+    <div id="sidebar-results"></div>
+
+  </aside>
+
+  <!-- Map -->
+  <div class="map-container">
+    <div id="map"></div>
+
+    <div class="map-overlay hidden" id="empty-state">
+      <div class="icon">📍</div>
+      <p>Select a location to begin void analysis</p>
+    </div>
+
+    <div class="map-overlay hidden" id="loading">
+      <div class="spinner"></div>
+      <p id="loading-msg">Fetching brand affinities &amp; mapping proximity…</p>
+      <div class="progress-bar-wrap"><div class="progress-bar"></div></div>
+    </div>
+
+    <div class="map-overlay error hidden" id="error-state">
+      <div class="icon">⚠️</div>
+      <p id="error-msg"></p>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="/static/app.js?v=30"></script>
+</body>
+</html>

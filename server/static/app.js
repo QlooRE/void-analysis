@@ -101,7 +101,7 @@ document.getElementById('analysis-type-toggle').querySelectorAll('.mode-btn').fo
     btn.classList.add('active');
     state.analysis_type = btn.dataset.type;
     analyzeBtn.textContent = state.analysis_type === 'cuisine'
-      ? 'Analyze Cuisine Voids' : 'Analyze Voids';
+      ? 'Analyze Culinary Gaps' : 'Analyze Taste Gaps';
     updateRadiusHint();
   });
 });
@@ -296,31 +296,31 @@ const STATUS_LEGEND_LOCALITY = [
 ];
 
 const STATUS_LEGEND_ADDRESS = [
-  { cls: 'hard-void',   label: 'Pop-up Candidate',
-    desc: 'No permanent locations found. Brand may be DTC or digitally native — strong pop-up or experiential opportunity.' },
-  { cls: 'near-void',   label: 'Near Void',
-    desc: 'Has physical presence, but none confirmed in this region.' },
-  { cls: 'available',   label: 'Available',
-    desc: 'Located within this state — accessible within ~25–50 miles of this address.' },
-  { cls: 'underserved', label: 'Underserved',
-    desc: 'In the metro area but not at this specific location.' },
-  { cls: 'present',     label: 'Present',
-    desc: 'Operating in this city. Consider co-tenancy or expansion.' },
+  { cls: 'hard-void',   label: 'Taste Signal, No Presence',
+    desc: 'Strong local taste affinity — no physical presence found anywhere. Prime opportunity for a first-to-market or pop-up play.' },
+  { cls: 'near-void',   label: 'Taste Signal, Regional Gap',
+    desc: 'Audience taste aligns with this brand, but no physical presence exists in this region.' },
+  { cls: 'available',   label: 'Taste Signal, Distant Presence',
+    desc: 'Brand exists within this state but not in proximity to this address.' },
+  { cls: 'underserved', label: 'Taste Signal, Local Gap',
+    desc: 'Present in the metro area but not at this specific location — a proximity gap against existing taste.' },
+  { cls: 'present',     label: 'Taste-Aligned',
+    desc: 'Brand already operating in this city. Taste and physical presence are aligned.' },
 ];
 
 const STATUS_LEGEND_CUISINE = [
-  { cls: 'cuisine-void', label: 'Cuisine Void',
-    desc: 'No restaurants of this type found within the search radius or nearby.' },
-  { cls: 'near-void',    label: 'Near Void',
-    desc: 'None within your radius — nearest option found beyond it.' },
-  { cls: 'underserved',  label: 'Underserved',
-    desc: 'Above-median demand but below-median share of the local restaurant mix. Real opportunity.' },
-  { cls: 'niche',        label: 'Niche',
-    desc: 'Below-median demand and below-median distribution — small market, currently balanced.' },
-  { cls: 'present',      label: 'Well Represented',
-    desc: 'Demand and supply share are proportionate — market is served.' },
-  { cls: 'saturated',    label: 'Saturated',
-    desc: 'Above-median distribution but below-median demand — more supply than the audience warrants.' },
+  { cls: 'cuisine-void', label: 'Culinary Blind Spot',
+    desc: 'No restaurants of this type found within the search radius or anywhere within 50 mi.' },
+  { cls: 'near-void',    label: 'Culinary Proximity Gap',
+    desc: 'None within your radius — nearest option found just beyond it.' },
+  { cls: 'underserved',  label: 'Culinary Demand Surplus',
+    desc: 'Above-median taste signal, below-median culinary footprint. A real gap between preference and presence.' },
+  { cls: 'niche',        label: 'Understated',
+    desc: 'Below-median taste signal and culinary footprint — present but quiet on both sides.' },
+  { cls: 'present',      label: 'Palate-Matched',
+    desc: 'Taste signal and physical presence are proportionate — the palate is being served.' },
+  { cls: 'saturated',    label: 'Culinary Oversupply',
+    desc: 'Above-median culinary footprint, below-median taste signal — more presence than the palate warrants.' },
 ];
 
 function renderResults(data) {
@@ -342,7 +342,7 @@ function renderResults(data) {
   // ── Status legend ─────────────────────────────────────────────
   const legend = document.createElement('div');
   legend.className = 'void-legend';
-  legend.innerHTML = `<div class="void-legend-header">Void Status Key</div>` +
+  legend.innerHTML = `<div class="void-legend-header">Taste Gap Key</div>` +
     STATUS_LEGEND_ADDRESS.map(({ cls, label, desc }) => `
       <div class="void-legend-item">
         <span class="void-legend-dot dot-${cls}"></span>
@@ -383,11 +383,11 @@ function renderResults(data) {
   const counts = {};
   data.brands.forEach(b => { counts[b.status] = (counts[b.status] || 0) + 1; });
   [
-    { cls: 'hard-void',   status: 'Pop-up Candidate' },
-    { cls: 'near-void',   status: 'Near Void' },
-    { cls: 'available',   status: 'Available' },
-    { cls: 'underserved', status: 'Underserved' },
-    { cls: 'present',     status: 'Present' },
+    { cls: 'hard-void',   status: 'Taste Signal, No Presence' },
+    { cls: 'near-void',   status: 'Taste Signal, Regional Gap' },
+    { cls: 'available',   status: 'Taste Signal, Distant Presence' },
+    { cls: 'underserved', status: 'Taste Signal, Local Gap' },
+    { cls: 'present',     status: 'Taste-Aligned' },
   ].filter(c => counts[c.status] > 0).forEach(({ cls, status }) => {
     const chip = document.createElement('span');
     chip.className = `void-summary-chip chip-${cls}`;
@@ -475,20 +475,20 @@ function renderCuisineResults(data) {
   ctxEl.innerHTML =
     `<span class="cuisine-locality-label">Address assessed</span>` +
     `<span class="cuisine-locality-name">${escHtml(localityName)}</span>` +
-    `<span class="cuisine-locality-note">Top 12 cuisines by demand signal · Supply counted within radius</span>`;
+    `<span class="cuisine-locality-note">Top 12 cuisines by taste signal · Culinary footprint counted within radius</span>`;
   sidebarResults.appendChild(ctxEl);
 
   // Legend
   const legend = document.createElement('div');
   legend.className = 'void-legend';
-  legend.innerHTML = `<div class="void-legend-header">Cuisine Void Key</div>` +
+  legend.innerHTML = `<div class="void-legend-header">Culinary Gap Key</div>` +
     STATUS_LEGEND_CUISINE.map(({ cls, label, desc }) => `
       <div class="void-legend-item">
         <span class="void-legend-dot dot-${cls}"></span>
         <span class="void-legend-label">${label}</span>
         <span class="void-legend-desc">${escHtml(desc)}</span>
       </div>`).join('') +
-    `<div class="void-legend-note">Affinity = median local relevance score of found restaurants · Supply = count of matching venues in Qloo's catalog within radius</div>`;
+    `<div class="void-legend-note">Taste signal = how often a cuisine surfaces in the local affinity-ranked restaurant mix · Culinary footprint = count of matching venues within radius</div>`;
   sidebarResults.appendChild(legend);
 
   // Export button
@@ -501,16 +501,16 @@ function renderCuisineResults(data) {
   // Summary chips with clickable filter
   const summary = document.createElement('div');
   summary.className = 'void-summary';
-  const counts = { 'Cuisine Void': 0, 'Near Void': 0, 'Underserved': 0, 'Niche': 0, 'Well Represented': 0, 'Saturated': 0 };
+  const counts = { 'Culinary Blind Spot': 0, 'Culinary Proximity Gap': 0, 'Culinary Demand Surplus': 0, 'Understated': 0, 'Palate-Matched': 0, 'Culinary Oversupply': 0 };
   data.cuisines.forEach(c => { counts[c.status] = (counts[c.status] || 0) + 1; });
   let cuisineActiveFilter = null;
   [
-    { cls: 'cuisine-void', label: `${counts['Cuisine Void']} Cuisine Voids`,       status: 'Cuisine Void' },
-    { cls: 'near-void',    label: `${counts['Near Void']} Near Voids`,             status: 'Near Void' },
-    { cls: 'underserved',  label: `${counts['Underserved']} Underserved`,           status: 'Underserved' },
-    { cls: 'niche',        label: `${counts['Niche']} Niche`,                       status: 'Niche' },
-    { cls: 'present',      label: `${counts['Well Represented']} Well Represented`, status: 'Well Represented' },
-    { cls: 'saturated',    label: `${counts['Saturated']} Saturated`,               status: 'Saturated' },
+    { cls: 'cuisine-void', label: `${counts['Culinary Blind Spot']} Culinary Blind Spots`,     status: 'Culinary Blind Spot' },
+    { cls: 'near-void',    label: `${counts['Culinary Proximity Gap']} Proximity Gaps`,        status: 'Culinary Proximity Gap' },
+    { cls: 'underserved',  label: `${counts['Culinary Demand Surplus']} Demand Surplus`,       status: 'Culinary Demand Surplus' },
+    { cls: 'niche',        label: `${counts['Understated']} Understated`,                      status: 'Understated' },
+    { cls: 'present',      label: `${counts['Palate-Matched']} Palate-Matched`,                status: 'Palate-Matched' },
+    { cls: 'saturated',    label: `${counts['Culinary Oversupply']} Culinary Oversupply`,      status: 'Culinary Oversupply' },
   ].filter(c => parseInt(c.label) > 0).forEach(({ cls, label, status }) => {
     const chip = document.createElement('span');
     chip.className = `void-summary-chip chip-${cls}`;
@@ -558,7 +558,7 @@ function renderCuisineResults(data) {
 
     const demandHtml = totalSampled > 0
       ? `<div class="cuisine-demand-row">
-           <span class="cuisine-demand-label">Demand signal</span>
+           <span class="cuisine-demand-label">Taste signal</span>
            <div class="cuisine-demand-bar-wrap">
              <div class="cuisine-demand-bar" style="width:${Math.min(demandPct * 5, 100)}%"></div>
            </div>
@@ -650,12 +650,12 @@ function exportCuisinePDF(data) {
   const now        = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
   const STATUS_COLORS = {
-    'Cuisine Void':    '#7A0026',
-    'Near Void':       '#FF6600',
-    'Underserved':     '#B38600',
-    'Niche':           '#2596BE',
-    'Well Represented':'#007A3D',
-    'Saturated':       '#7B4FBF',
+    'Culinary Blind Spot':    '#7A0026',
+    'Culinary Proximity Gap': '#FF6600',
+    'Culinary Demand Surplus':'#B38600',
+    'Understated':            '#2596BE',
+    'Palate-Matched':         '#007A3D',
+    'Culinary Oversupply':    '#7B4FBF',
   };
 
   const rowsHtml = data.cuisines.map(c => {
@@ -672,17 +672,18 @@ function exportCuisinePDF(data) {
         ${escHtml(c.status)}</span></td>
       <td style="text-align:right">${c.demand_count}</td>
       <td style="text-align:right">${supply}</td>
+
       <td style="text-align:right">${distShare}</td>
     </tr>`;
   }).join('');
 
   const interpretRows = [
-    ['Cuisine Void',    '#7A0026', 'No restaurants of this type found within the search radius or anywhere within 50 mi.'],
-    ['Near Void',       '#FF6600', 'None within your radius — nearest option was found just beyond it.'],
-    ['Underserved',     '#B38600', 'Above-median demand but below-median distribution share. A real market opportunity.'],
-    ['Niche',           '#2596BE', 'Below-median demand and below-median distribution — small but currently balanced.'],
-    ['Well Represented','#007A3D', 'Demand and supply share are proportionate — the market is well served.'],
-    ['Saturated',       '#7B4FBF', 'More supply than the audience warrants — above-median distribution, below-median demand.'],
+    ['Culinary Blind Spot',    '#7A0026', 'No restaurants of this type found within the search radius or anywhere within 50 mi.'],
+    ['Culinary Proximity Gap', '#FF6600', 'None within your radius — nearest option was found just beyond it.'],
+    ['Culinary Demand Surplus','#B38600', 'Above-median taste signal, below-median culinary footprint. A real gap between preference and presence.'],
+    ['Understated',            '#2596BE', 'Below-median taste signal and culinary footprint — present but quiet on both sides.'],
+    ['Palate-Matched',         '#007A3D', 'Taste signal and physical presence are proportionate — the palate is being served.'],
+    ['Culinary Oversupply',    '#7B4FBF', 'Above-median culinary footprint, below-median taste signal — more presence than the palate warrants.'],
   ].map(([label, color, desc]) =>
     `<tr>
       <td style="white-space:nowrap"><span style="display:inline-block;width:8px;height:8px;
@@ -696,7 +697,7 @@ function exportCuisinePDF(data) {
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Void Analysis Report — ${escHtml(addrLabel)}</title>
+<title>Taste Gap Analysis — Culinary Report — ${escHtml(addrLabel)}</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Helvetica Neue', Arial, sans-serif; font-size: 12px; color: #282832; padding: 32px; }
@@ -715,7 +716,7 @@ function exportCuisinePDF(data) {
 </style>
 </head>
 <body>
-  <h1>Void Analysis — Cuisine Report</h1>
+  <h1>Taste Gap Analysis — Culinary Report</h1>
   <div class="meta">Generated ${now} · Powered by Qloo Taste AI™</div>
 
   <h2>Inputs</h2>
@@ -724,16 +725,16 @@ function exportCuisinePDF(data) {
     <div class="input-row"><span class="input-label">Radius</span><strong>${radiusMi} mi</strong></div>
     <div class="input-row"><span class="input-label">Signals</span><strong>${escHtml(signals)}</strong></div>
     <div class="input-row"><span class="input-label">Age groups</span><strong>${escHtml(ageGroups)}</strong></div>
-    <div class="input-row"><span class="input-label">Sampled</span><strong>${data.total_sampled || 0} venues for demand signal</strong></div>
-    <div class="input-row"><span class="input-label">Cuisines</span><strong>Top 12 by demand rank</strong></div>
+    <div class="input-row"><span class="input-label">Sampled</span><strong>${data.total_sampled || 0} venues for taste signal</strong></div>
+    <div class="input-row"><span class="input-label">Cuisines</span><strong>Top 12 by taste signal</strong></div>
   </div>
 
-  <h2>Cuisine Void Results</h2>
+  <h2>Culinary Gap Results</h2>
   <table>
     <thead><tr>
       <th>Cuisine</th><th>Status</th>
-      <th style="text-align:right">Demand Count</th>
-      <th style="text-align:right">Supply (within ${radiusMi} mi)</th>
+      <th style="text-align:right">Taste Signal</th>
+      <th style="text-align:right">Culinary Footprint (within ${radiusMi} mi)</th>
       <th style="text-align:right">Distribution Share</th>
     </tr></thead>
     <tbody>${rowsHtml}</tbody>
@@ -741,16 +742,16 @@ function exportCuisinePDF(data) {
 
   <h2>How to Interpret Results</h2>
   <p style="color:#646E78;font-size:11px;margin-bottom:8px">
-    Demand is measured by how often a cuisine appears in a locally-sampled restaurant mix.
-    Distribution share is each cuisine's proportion of the total supply count within the radius.
-    Status is assigned by comparing each cuisine's demand and distribution share to the median across all cuisines.
+    Taste signal measures how often a cuisine surfaces in the local affinity-ranked restaurant mix.
+    Culinary footprint is the count of matching venues within the radius.
+    Status is assigned by comparing each cuisine's taste signal and footprint to the median across all cuisines.
   </p>
   <table>
     <thead><tr><th>Status</th><th>Meaning</th></tr></thead>
     <tbody>${interpretRows}</tbody>
   </table>
 
-  <div class="footer">Void Analysis · Qloo Taste AI™ · ${now}</div>
+  <div class="footer">Taste Gap Analysis · Qloo Taste AI™ · ${now}</div>
 </body>
 </html>`;
 
@@ -770,18 +771,17 @@ function exportBrandPDF(data) {
   const now        = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
   const STATUS_COLORS = {
-    'Pop-up Candidate': '#CC0033',
-    'Near Void':        '#FF6600',
-    'Available':        '#2596BE',
-    'Underserved':      '#B38600',
-    'Present':          '#007A3D',
+    'Taste Signal, No Presence':      '#CC0033',
+    'Taste Signal, Regional Gap':     '#FF6600',
+    'Taste Signal, Distant Presence': '#2596BE',
+    'Taste Signal, Local Gap':        '#B38600',
+    'Taste-Aligned':                  '#007A3D',
   };
 
   const rowsHtml = data.brands.map(b => {
     const color = STATUS_COLORS[b.status] || '#646E78';
     return `<tr>
       <td style="font-weight:600">${escHtml(b.name)}</td>
-      <td>${escHtml(b.tier || '')}</td>
       <td><span style="background:${color}18;color:${color};border:1px solid ${color}33;
         padding:2px 7px;border-radius:4px;font-size:11px;font-weight:600;white-space:nowrap">
         ${escHtml(b.status)}</span></td>
@@ -789,11 +789,11 @@ function exportBrandPDF(data) {
   }).join('');
 
   const interpretRows = [
-    ['Pop-up Candidate', '#CC0033', 'No permanent locations found. Strong pop-up or experiential opportunity.'],
-    ['Near Void',        '#FF6600', 'Has physical presence elsewhere, but none confirmed in this region.'],
-    ['Available',        '#2596BE', 'Located within this state — accessible within ~25–50 miles of this address.'],
-    ['Underserved',      '#B38600', 'In the metro area but not at this specific location.'],
-    ['Present',          '#007A3D', 'Operating in this city. Consider co-tenancy or expansion.'],
+    ['Taste Signal, No Presence',      '#CC0033', 'Strong local taste affinity — no physical presence found anywhere. Prime opportunity for a first-to-market or pop-up play.'],
+    ['Taste Signal, Regional Gap',     '#FF6600', 'Audience taste aligns with this brand, but no physical presence exists in this region.'],
+    ['Taste Signal, Distant Presence', '#2596BE', 'Brand exists within this state but not in proximity to this address.'],
+    ['Taste Signal, Local Gap',        '#B38600', 'Present in the metro area but not at this specific location — a proximity gap against existing taste.'],
+    ['Taste-Aligned',                  '#007A3D', 'Brand already operating in this city. Taste and physical presence are aligned.'],
   ].map(([label, color, desc]) =>
     `<tr>
       <td style="white-space:nowrap"><span style="display:inline-block;width:8px;height:8px;
@@ -826,7 +826,7 @@ function exportBrandPDF(data) {
 </style>
 </head>
 <body>
-  <h1>Void Analysis — Brand Report</h1>
+  <h1>Taste Gap Analysis — Brand Report</h1>
   <div class="meta">Generated ${now} · Powered by Qloo Taste AI™</div>
 
   <h2>Inputs</h2>
@@ -837,9 +837,9 @@ function exportBrandPDF(data) {
     <div class="input-row"><span class="input-label">Age groups</span><strong>${escHtml(ageGroups)}</strong></div>
   </div>
 
-  <h2>Brand Void Results (${data.brands.length} brands)</h2>
+  <h2>Brand Taste Gap Results (${data.brands.length} brands)</h2>
   <table>
-    <thead><tr><th>Brand</th><th>Affinity Tier</th><th>Status</th></tr></thead>
+    <thead><tr><th>Brand</th><th>Status</th></tr></thead>
     <tbody>${rowsHtml}</tbody>
   </table>
 
@@ -849,7 +849,7 @@ function exportBrandPDF(data) {
     <tbody>${interpretRows}</tbody>
   </table>
 
-  <div class="footer">Void Analysis · Qloo Taste AI™ · ${now}</div>
+  <div class="footer">Taste Gap Analysis · Qloo Taste AI™ · ${now}</div>
 </body>
 </html>`;
 
@@ -879,8 +879,8 @@ analyzeBtn.addEventListener('click', async () => {
     const loadingMsg = document.getElementById('loading-msg');
     if (loadingMsg) {
       loadingMsg.textContent = state.analysis_type === 'cuisine'
-        ? 'Classifying cuisine supply & measuring local affinity… (may take ~30s)'
-        : 'Fetching brand affinities & mapping proximity…';
+        ? 'Mapping culinary footprint & taste signals… (may take ~30s)'
+        : 'Mapping taste intensity & physical presence…';
     }
 
     if (state.analysis_type === 'cuisine') {

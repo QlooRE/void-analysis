@@ -56,31 +56,31 @@ class TestStatusMatrix:
     def _classify(self, supply, has_nearest=False,
                   above_demand=True, above_dist=True):
         if supply == 0 and not has_nearest:
-            return "Cuisine Void"
+            return "Culinary Blind Spot"
         if supply == 0 and has_nearest:
-            return "Near Void"
+            return "Culinary Proximity Gap"
         if above_demand and not above_dist:
-            return "Underserved"
+            return "Culinary Demand Surplus"
         if not above_demand and not above_dist:
-            return "Niche"
+            return "Understated"
         if not above_demand and above_dist:
-            return "Saturated"
-        return "Well Represented"
+            return "Culinary Oversupply"
+        return "Palate-Matched"
 
-    def test_cuisine_void(self):
-        assert self._classify(0, False) == "Cuisine Void"
+    def test_culinary_blind_spot(self):
+        assert self._classify(0, False) == "Culinary Blind Spot"
 
-    def test_near_void(self):
-        assert self._classify(0, True) == "Near Void"
+    def test_culinary_proximity_gap(self):
+        assert self._classify(0, True) == "Culinary Proximity Gap"
 
-    def test_underserved(self):
-        assert self._classify(2, above_demand=True,  above_dist=False) == "Underserved"
+    def test_culinary_demand_surplus(self):
+        assert self._classify(2, above_demand=True,  above_dist=False) == "Culinary Demand Surplus"
 
-    def test_niche(self):
-        assert self._classify(1, above_demand=False, above_dist=False) == "Niche"
+    def test_understated(self):
+        assert self._classify(1, above_demand=False, above_dist=False) == "Understated"
 
-    def test_saturated(self):
-        assert self._classify(7, above_demand=False, above_dist=True)  == "Saturated"
+    def test_culinary_oversupply(self):
+        assert self._classify(7, above_demand=False, above_dist=True)  == "Culinary Oversupply"
 
-    def test_well_represented(self):
-        assert self._classify(9, above_demand=True,  above_dist=True)  == "Well Represented"
+    def test_palate_matched(self):
+        assert self._classify(9, above_demand=True,  above_dist=True)  == "Palate-Matched"

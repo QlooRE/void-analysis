@@ -348,7 +348,13 @@ def analyze_voids(location_query, lat, lon, age_group_keys, entity_signals, tag_
     retail_brands = [b for b in affinity_brands if b["is_retail"]]
     bm_brands = retail_brands[:30]
 
-    STATUS_ORDER = {"Pop-up Candidate": 0, "Near Void": 1, "Available": 2, "Underserved": 3, "Present": 4}
+    STATUS_ORDER = {
+        "Taste Signal, No Presence":      0,
+        "Taste Signal, Regional Gap":     1,
+        "Taste Signal, Distant Presence": 2,
+        "Taste Signal, Local Gap":        3,
+        "Taste-Aligned":                  4,
+    }
 
     def enrich(brand):
         locations = find_brand_locations(
@@ -360,25 +366,24 @@ def analyze_voids(location_query, lat, lon, age_group_keys, entity_signals, tag_
         tiers = {loc["tier"] for loc in locations}
 
         if "city" in tiers:
-            # Already operating in this city
-            status, status_class = "Present", "present"
+            # Taste and physical presence are aligned in this city
+            status, status_class = "Taste-Aligned", "present"
         elif "metro" in tiers:
-            # Within the metro area — close but not at this location
-            status, status_class = "Underserved", "underserved"
+            # Taste signal exists — physical presence is in the metro but not here
+            status, status_class = "Taste Signal, Local Gap", "underserved"
         elif "state" in tiers:
             if location_mode == "address":
-                # Address mode: state-level = accessible by car (~25–50 mi range)
-                status, status_class = "Available", "available"
+                # Address mode: state-level = present but distant (~25–50 mi)
+                status, status_class = "Taste Signal, Distant Presence", "available"
             else:
-                # Locality mode: in-state counts as underserved
-                status, status_class = "Underserved", "underserved"
+                # Locality mode: in-state counts as a local gap
+                status, status_class = "Taste Signal, Local Gap", "underserved"
         elif "country" in tiers or locations:
-            # Has physical presence but not in this region
-            status, status_class = "Near Void", "near-void"
+            # Taste signal exists — no physical presence in this region
+            status, status_class = "Taste Signal, Regional Gap", "near-void"
         else:
-            # No physical locations found — brand may be DTC/digital-first;
-            # flag as pop-up candidate rather than a traditional void
-            status, status_class = "Pop-up Candidate", "hard-void"
+            # Strong taste signal, no physical presence found anywhere
+            status, status_class = "Taste Signal, No Presence", "hard-void"
 
         nearby = [l for l in locations if l["tier"] in ("city", "metro", "state")]
 
@@ -650,9 +655,9 @@ def analyze_cuisine_voids(location_query, lat, lon, location_mode="locality", ra
 
         # Status assigned in post-processing; placeholder for void cases only
         if supply_count == 0 and nearest_venue is None:
-            status, status_class = "Cuisine Void", "cuisine-void"
+            status, status_class = "Culinary Blind Spot", "cuisine-void"
         elif supply_count == 0:
-            status, status_class = "Near Void", "near-void"
+            status, status_class = "Culinary Proximity Gap", "near-void"
         else:
             status, status_class = None, None   # resolved below
 
@@ -709,19 +714,23 @@ def analyze_cuisine_voids(location_query, lat, lon, location_mode="locality", ra
             above_demand = r["demand_count"]        >= median_demand
             above_dist   = r["distribution_share"]  >= median_share
             if above_demand and not above_dist:
-                r["status"], r["status_class"] = "Underserved",      "underserved"
+                r["status"], r["status_class"] = "Culinary Demand Surplus", "underserved"
             elif not above_demand and not above_dist:
-                r["status"], r["status_class"] = "Niche",            "niche"
+                r["status"], r["status_class"] = "Understated",             "niche"
             elif not above_demand and above_dist:
-                r["status"], r["status_class"] = "Saturated",        "saturated"
+                r["status"], r["status_class"] = "Culinary Oversupply",     "saturated"
             else:
-                r["status"], r["status_class"] = "Well Represented", "present"
+                r["status"], r["status_class"] = "Palate-Matched",          "present"
 
         print(f"Medians — demand: {median_demand:.1f}, distribution: {median_share:.3f}")
 
     STATUS_ORDER = {
-        "Cuisine Void": 0, "Near Void": 1,
-        "Underserved": 2, "Niche": 3, "Well Represented": 4, "Saturated": 5,
+        "Culinary Blind Spot":    0,
+        "Culinary Proximity Gap": 1,
+        "Culinary Demand Surplus":2,
+        "Understated":            3,
+        "Palate-Matched":         4,
+        "Culinary Oversupply":    5,
     }
     results.sort(key=lambda x: (STATUS_ORDER.get(x["status"], 9), x["supply_count"]))
     return results, total_sampled

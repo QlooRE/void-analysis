@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Void Analysis — Qloo Taste AI™</title>
+  <title>Taste Gap Analysis — Qloo Taste AI™</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="/static/style.css?v=21">
+  <link rel="stylesheet" href="/static/style.css?v=22">
 </head>
 <body>
 
 <header class="app-header">
   <div class="logo">Q</div>
   <div>
-    <h1>Void Analysis</h1>
-    <p>Taste AI™ — retail demand vs. physical presence</p>
+    <h1>Taste Gap Analysis</h1>
+    <p>Taste AI™ — taste intensity vs. physical presence</p>
   </div>
 </header>
 
@@ -78,12 +78,12 @@
     <div>
       <div class="section-label">④ Analysis Type</div>
       <div class="mode-toggle" id="analysis-type-toggle">
-        <button class="mode-btn active" data-type="brand">Brand Void</button>
-        <button class="mode-btn" data-type="cuisine">Cuisine Void</button>
+        <button class="mode-btn active" data-type="brand">Brand Gaps</button>
+        <button class="mode-btn" data-type="cuisine">Culinary Gaps</button>
       </div>
     </div>
 
-    <button class="discover-btn" id="analyze-btn" disabled>Analyze Voids</button>
+    <button class="discover-btn" id="analyze-btn" disabled>Analyze Taste Gaps</button>
 
     <!-- Results injected here -->
     <div id="sidebar-results"></div>
@@ -113,6 +113,6 @@
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="/static/app.js?v=30"></script>
+<script src="/static/app.js?v=31"></script>
 </body>
 </html>

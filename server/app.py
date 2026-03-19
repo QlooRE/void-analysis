@@ -86,7 +86,7 @@ def analyze():
     if not brands:
         return jsonify({"error": "No brands returned. Try a different location or signals."}), 404
 
-    summary = {"Pop-up Candidate": 0, "Near Void": 0, "Available": 0, "Underserved": 0, "Present": 0}
+    summary = {"Taste Signal, No Presence": 0, "Taste Signal, Regional Gap": 0, "Taste Signal, Distant Presence": 0, "Taste Signal, Local Gap": 0, "Taste-Aligned": 0}
     for b in brands:
         summary[b["status"]] = summary.get(b["status"], 0) + 1
 

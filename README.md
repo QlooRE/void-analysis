@@ -1,8 +1,8 @@
-# Void Analysis
+# Taste Gap Analysis
 
-Retail demand vs. physical presence — powered by [Qloo Taste AI™](https://qloo.com).
+Taste intensity vs. physical presence — powered by [Qloo Taste AI™](https://qloo.com).
 
-Given an address and radius, Void Analysis identifies where consumer demand exists but physical retail or dining supply does not — surfacing actionable gaps for leasing, expansion, and pop-up strategy.
+Given an address and radius, Taste Gap Analysis identifies where audience taste affinity exists but physical retail or dining presence does not — surfacing actionable gaps for leasing, expansion, and pop-up strategy.
 
 ---
 
@@ -13,11 +13,11 @@ Fetches brands the local audience has affinity for (via Qloo's taste graph), fil
 
 | Status | Meaning |
 |---|---|
-| **Pop-up Candidate** | No physical locations found anywhere — likely DTC or digitally native |
-| **Near Void** | Has physical presence, but none in this region |
-| **Available** | Located within this state (~25–50 mi away) |
-| **Underserved** | In the metro area but not at this specific location |
-| **Present** | Already operating in this city |
+| **Taste Signal, No Presence** | Strong local taste affinity — no physical presence found anywhere. Prime opportunity for a first-to-market or pop-up play. |
+| **Taste Signal, Regional Gap** | Audience taste aligns with this brand, but no physical presence exists in this region. |
+| **Taste Signal, Distant Presence** | Brand exists within this state but not in proximity to this address. |
+| **Taste Signal, Local Gap** | Present in the metro area but not at this specific location — a proximity gap against existing taste. |
+| **Taste-Aligned** | Brand already operating in this city. Taste and physical presence are aligned. |
 
 Brands are sampled across four popularity bands (`filter.popularity.max = 1.0 / 0.75 / 0.5 / 0.25`) to surface a mix of mainstream and niche brands rather than only globally popular names.
 
@@ -32,12 +32,12 @@ Cuisines with supply are classified using a 4-quadrant demand/distribution matri
 
 | Status | Meaning |
 |---|---|
-| **Cuisine Void** | No restaurants of this type found within 50 mi |
-| **Near Void** | None within radius — nearest found just beyond it |
-| **Underserved** | Above-median demand, below-median distribution share — real opportunity |
-| **Niche** | Below-median demand and distribution — small but balanced |
-| **Well Represented** | Demand and supply are proportionate |
-| **Saturated** | Above-median distribution, below-median demand — oversupplied |
+| **Culinary Blind Spot** | No restaurants of this type found within the search radius or anywhere within 50 mi |
+| **Culinary Proximity Gap** | None within radius — nearest option found just beyond it |
+| **Culinary Demand Surplus** | Above-median taste signal, below-median culinary footprint — a real gap between preference and presence |
+| **Understated** | Below-median taste signal and culinary footprint — present but quiet on both sides |
+| **Palate-Matched** | Taste signal and physical presence are proportionate — the palate is being served |
+| **Culinary Oversupply** | Above-median culinary footprint, below-median taste signal — more presence than the palate warrants |
 
 ---
 

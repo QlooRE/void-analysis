@@ -61,7 +61,7 @@ Cuisines with supply are classified using a 4-quadrant demand/distribution matri
 
 ```bash
 cd server
-pip install flask certifi
+pip install -r requirements.txt
 ```
 
 ### Configure
